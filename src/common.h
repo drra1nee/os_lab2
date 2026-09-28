@@ -8,10 +8,8 @@
 
 #define BUFFER_SIZE 4096
 
-/* вывод системной ошибки по коду GetLastError() */
 void print_error(const char *msg);
 
-/* логирование с указанием PID процесса и TID потока */
 void log_pid(const char *tag, const char *msg);
 
 #endif
