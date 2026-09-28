@@ -1,0 +1,11 @@
+*.exe
+*.o
+*.obj
+.idea/
+.vscode/
+out*.txt
+test*.txt
+t1
+t2
+~$*
+*out1.txt
