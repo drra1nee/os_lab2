@@ -1,6 +1,6 @@
 #include "common.h"
 
-/* удаление символов перевода строки \r и \n с конца буфера */
+/* удаление символов перевода строки */
 static void trim_newline(char *str) {
     size_t len = strlen(str);
     while (len > 0 && (str[len - 1] == '\r' || str[len - 1] == '\n')) {
@@ -36,19 +36,19 @@ int main() {
     char file1[MAX_PATH];
     char file2[MAX_PATH];
 
-    /* 1-я строка от пользователя: имя файла для child1 */
+    /* имя файла для child1 */
     printf("Enter filename for Child 1: ");
     fflush(stdout);
     if (!fgets(file1, sizeof(file1), stdin)) return 1;
     trim_newline(file1);
 
-    /* 2-я строка от пользователя: имя файла для child2 */
+    /* имя файла для child2 */
     printf("Enter filename for Child 2: ");
     fflush(stdout);
     if (!fgets(file2, sizeof(file2), stdin)) return 1;
     trim_newline(file2);
 
-    /* атрибуты безопасности: дескрипторы наследуются дочерними процессами */
+    /* атрибуты безопасности */
     SECURITY_ATTRIBUTES sa;
     sa.nLength = sizeof(SECURITY_ATTRIBUTES);
     sa.bInheritHandle = TRUE;
@@ -85,7 +85,7 @@ int main() {
     CloseHandle(hFile1);
     printf("[PARENT] Spawned child1 (PID %lu) for file '%s'\n", pi1.dwProcessId, file1);
 
-    /* открытие выходного файла для child2 (наследуемый дескриптор) */
+    /* открытие выходного файла для child2 */
     HANDLE hFile2 = CreateFileA(file2, GENERIC_WRITE, FILE_SHARE_READ, &sa, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     if (hFile2 == INVALID_HANDLE_VALUE) {
         print_error("CreateFile failed for file2");
@@ -113,7 +113,7 @@ int main() {
         CloseHandle(hFile2);
         return 1;
     }
-    /* закрываем дескрипторы чтения и файла в родителе - они переданы потомку */
+    /* закрываем дескрипторы чтения и файла в родителе */
     CloseHandle(hPipe2Read);
     CloseHandle(hFile2);
     printf("[PARENT] Spawned child2 (PID %lu) for file '%s'\n", pi2.dwProcessId, file2);
@@ -147,11 +147,10 @@ int main() {
     }
 
     log_pid("PARENT", "Input completed, closing pipes");
-    /* закрываем концы записи каналов */
     CloseHandle(hPipe1Write);
     CloseHandle(hPipe2Write);
 
-    /* ожидание корректного завершения обоих дочерних процессов */
+    /* ожидание завершения обоих дочерних процессов */
     HANDLE children[2] = { pi1.hProcess, pi2.hProcess };
     WaitForMultipleObjects(2, children, TRUE, INFINITE);
 

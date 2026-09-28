@@ -108,7 +108,7 @@ int main(void) {
                 filtered[len + 1] = '\0';
 
                 unsigned long written = 0;
-                /* запись обработанной строки в stdout (перенаправленный в файл) */
+                /* запись обработанной строки в stdout */
                 if (!WriteFile(hStdOut, filtered, (unsigned long)(len + 1), &written, NULL)) {
                     print_error("WriteFile failed");
                 }
